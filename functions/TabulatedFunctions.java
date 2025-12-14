@@ -123,4 +123,30 @@ public class TabulatedFunctions {
         }
         return createTabulatedFunction(cls, array);
     }
+    public static TabulatedFunction inputTabulatedFunction(Class<? extends TabulatedFunction> cls, InputStream in) throws IOException {
+        DataInputStream dataIn = new DataInputStream(in);
+        int pointCount = dataIn.readInt();
+        FunctionPoint[] array = new FunctionPoint[pointCount];
+        for (int i = 0; i < pointCount; i++) {
+            array[i] = new FunctionPoint(dataIn.readDouble(), dataIn.readDouble());
+        }
+        return createTabulatedFunction(cls, array);
+    }
+    public static TabulatedFunction readTabulatedFunction(Class<? extends TabulatedFunction> cls, Reader in) throws IOException {
+        StreamTokenizer tokenizer = new StreamTokenizer(in);
+        tokenizer.parseNumbers();
+        tokenizer.nextToken();
+        int pointCount = (int)tokenizer.nval;
+        FunctionPoint[] array = new FunctionPoint[pointCount];
+        double tempX;
+        double tempY;
+        for (int i = 0; i < pointCount; i++) {
+            tokenizer.nextToken();
+            tempX = tokenizer.nval;
+            tokenizer.nextToken();
+            tempY = tokenizer.nval;
+            array[i] = new FunctionPoint(tempX, tempY);
+        }
+        return createTabulatedFunction(cls, array);
+    }
 }
